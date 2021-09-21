@@ -35,8 +35,6 @@ namespace Dms
         {
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DMSConnection")));
-          
-
 
             services.AddAutoMapper(typeof(MappingInitilizer));
             services.AddTransient<IUnitOfWork, UnitOfWork>();

@@ -5,11 +5,21 @@ using System.Threading.Tasks;
 
 namespace Dms.Core.Dto
 {
+    public class SearchAppointmentDto
+    {
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public int DoctorId { get; set; }
+
+
+    }
     public class CreateAppointmentDto
     {
         public DateTime StartDateTime { get; set; }
         public string Detail { get; set; }
-        public bool Status { get; set; }
+        public int PatientId { get; set; }
+        public int DoctorId { get; set; }
+
     }
 
     public class AppointmentDto:CreateAppointmentDto

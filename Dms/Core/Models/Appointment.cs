@@ -10,7 +10,6 @@ namespace Dms.Core.Models
         public int Id { get; set; }
         public DateTime StartDateTime { get; set; }
         public string Detail { get; set; }
-        public bool Status { get; set; }
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public virtual Patient Patient { get; set; }

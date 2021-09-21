@@ -8,7 +8,7 @@ namespace Dms.Core.IRepository
         IEnumerable<Doctor> GetDectors();
         IEnumerable<Doctor> GetAvailableDoctors();
         Doctor GetDoctor(int id);
-        //Doctor GetProfile(string userId);
+        Doctor GetProfile(int userId);
         void Add(Doctor doctor);
     }
 }

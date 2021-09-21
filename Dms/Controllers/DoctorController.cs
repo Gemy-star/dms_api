@@ -33,6 +33,7 @@ namespace Dms.Controllers
         {
             try
             {
+                _logger.LogInformation($"Attempt To GetAll Doctors ");
                 var doctors = _unitOfWork.Doctors.GetDectors();
                 var results = _mapper.Map<IList<DoctorDto>>(doctors);
                 return Ok(results);
@@ -44,12 +45,34 @@ namespace Dms.Controllers
             }
         }
 
-    
-        [HttpGet("/avaliableDoctors")]
+
+
+        [HttpGet]
+        [Route("GetDoctorPerPaitent")]
+        public async Task<IActionResult> GetDoctorPerPaitent()
+        {
+            try
+            {
+                _logger.LogInformation($"Attempt for Get Avaliable Doctors ");
+                var doctors = _unitOfWork.Apointments.GetDoctorPerPaiitent();
+
+                return Ok(doctors);
+            }
+            catch (Exception)
+            {
+                _logger.LogError($"something went wrong in {nameof(GetDoctorPerPaitent)}");
+                return StatusCode(500, "Internal server Error");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetAvaliableDoctors")]
         public async Task<IActionResult> GetAvaliableDoctors()
         {
             try
             {
+                _logger.LogInformation($"Attempt for Get Avaliable Doctors ");
                 var doctors = _unitOfWork.Doctors.GetAvailableDoctors();
                 var results = _mapper.Map<IList<DoctorDto>>(doctors);
                 return Ok(results);
@@ -61,11 +84,14 @@ namespace Dms.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetDoctor(int id)
+
+        [HttpGet]
+        [Route("GetDoctorById")]
+        public async Task<IActionResult> GetDoctor([FromQuery(Name ="id")]int id)
         {
             try
             {
+                _logger.LogInformation($"Attempt To Get Doctor {id} ");
                 var doctors = _unitOfWork.Doctors.GetDoctor(id);
                 var results = _mapper.Map<DoctorDto>(doctors);
                 return Ok(results);

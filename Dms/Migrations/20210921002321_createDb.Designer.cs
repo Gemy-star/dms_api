@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dms.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210918203457_createDb")]
+    [Migration("20210921002321_createDb")]
     partial class createDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,6 @@ namespace Dms.Migrations
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
@@ -71,12 +68,7 @@ namespace Dms.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SpecializationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Doctors");
                 });
@@ -108,34 +100,6 @@ namespace Dms.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("Dms.Core.Models.PatientStatus", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PatientStatuses");
-                });
-
-            modelBuilder.Entity("Dms.Core.Models.Specialization", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Specializations");
-                });
-
             modelBuilder.Entity("Dms.Core.Models.Appointment", b =>
                 {
                     b.HasOne("Dms.Core.Models.Doctor", "Doctor")
@@ -153,17 +117,6 @@ namespace Dms.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Dms.Core.Models.Doctor", b =>
-                {
-                    b.HasOne("Dms.Core.Models.Specialization", "Specialization")
-                        .WithMany()
-                        .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("Dms.Core.Models.Doctor", b =>

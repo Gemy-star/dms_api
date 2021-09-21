@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Dms.Core.ViewModel;
 using Dms.Persistence;
+using Dms.Core.Dto;
 
 namespace Dms.Persistence.Repositories
 {
@@ -18,10 +19,7 @@ namespace Dms.Persistence.Repositories
         {
             _context = context;
         }
-        /// <summary>
-        /// Get all appointments
-        /// </summary>
-        /// <returns></returns>
+   
         public IEnumerable<Appointment> GetAppointments()
         {
             return _context.Appointments
@@ -29,11 +27,7 @@ namespace Dms.Persistence.Repositories
                 .Include(d => d.Doctor)
                 .ToList();
         }
-        /// <summary>
-        /// Get appointments for single patient
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+    
         public IEnumerable<Appointment> GetAppointmentWithPatient(int id)
         {
             return _context.Appointments
@@ -42,14 +36,9 @@ namespace Dms.Persistence.Repositories
                 .Include(d => d.Doctor)
                 .ToList();
         }
-        /// <summary>
-        /// Get appointments for single doctor
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+     
         public IEnumerable<Appointment> GetAppointmentByDoctor(int id)
         {
-            //return (from a in _context.Appointments where a.DoctorId == id select a).AsEnumerable();
 
             return _context.Appointments
                 .Where(d => d.DoctorId == id)
@@ -57,11 +46,7 @@ namespace Dms.Persistence.Repositories
                 .ToList();
         }
 
-        /// <summary>
-        /// Get upcomming appointments for doctor - Admin section
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+       
         public IEnumerable<Appointment> GetTodaysAppointments(int id)
         {
             DateTime today = DateTime.Now.Date;
@@ -71,20 +56,16 @@ namespace Dms.Persistence.Repositories
                 .OrderBy(d => d.StartDateTime)
                 .ToList();
         }
-        /// <summary>
-        /// Get upcomming appointments for specific doctor
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        //public IEnumerable<Appointment> GetUpcommingAppointments(string userId)
-        //{
-        //    DateTime today = DateTime.Now.Date;
-        //    return _context.Appointments
-        //        .Where(d => d.Doctor.PhysicianId == userId && d.StartDateTime >= today && d.Status==true)
-        //        .Include(p => p.Patient)
-        //        .OrderBy(d => d.StartDateTime)
-        //        .ToList();
-        //}
+     
+        public IEnumerable<Appointment> GetUpcommingAppointments(int userId)
+        {
+            DateTime today = DateTime.Now.Date;
+            return _context.Appointments
+                .Where(d => d.Doctor.Id == userId && d.StartDateTime >= today)
+                .Include(p => p.Patient)
+                .OrderBy(d => d.StartDateTime)
+                .ToList();
+        }
 
         public IQueryable<Appointment> FilterAppointments(AppointmentSearchVM searchModel)
         {
@@ -99,25 +80,12 @@ namespace Dms.Persistence.Repositories
                     {
                         result = result.Where(x => x.StartDateTime.Year == DateTime.Now.Year && x.StartDateTime.Month == DateTime.Now.Month);
                     }
-                    else if (searchModel.Option == "Pending")
-                    {
-                        result = result.Where(x => x.Status == false);
-                    }
-                    else if (searchModel.Option == "Approved")
-                    {
-                        result = result.Where(x => x.Status);
-                    }
                 }
             }
 
             return result;
 
         }
-        /// <summary>
-        /// Get Daily appointments
-        /// </summary>
-        /// <param name="getDate"></param>
-        /// <returns></returns>
         public IEnumerable<Appointment> GetDaillyAppointments(DateTime getDate)
         {
             return _context.Appointments.Where(a => (a.StartDateTime - getDate).TotalDays == 0)
@@ -126,32 +94,16 @@ namespace Dms.Persistence.Repositories
                 .ToList();
         }
 
-        /// <summary>
-        /// Validate appointment date and time
-        /// </summary>
-        /// <param name="appntDate"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
+       
         public bool ValidateAppointment(DateTime appntDate, int id)
         {
             return _context.Appointments.Any(a => a.StartDateTime == appntDate && a.DoctorId == id);
         }
-        /// <summary>
-        /// Get number of appointments for defined patient
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+    
         public int CountAppointments(int id)
         {
             return _context.Appointments.Count(a => a.PatientId == id);
         }
-
-
-        /// <summary>
-        /// Get single appointment
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public Appointment GetAppointment(int id)
         {
             return _context.Appointments.Find(id);
@@ -159,8 +111,21 @@ namespace Dms.Persistence.Repositories
 
         public void Add(Appointment appointment)
         {
-            _context.Appointments.Add(appointment);
+            _context.Appointments.AddAsync(appointment);
         }
 
+        public IList<DoctorPerPaitentDto> GetDoctorPerPaiitent()
+        {
+            return _context.Appointments.GroupBy(x => x.Doctor.Name).Select(x => new DoctorPerPaitentDto { name = x.Key, value = x.Count() }).ToList();
+
+        }
+        public IList<Appointment> SearchAppointmentRange(SearchAppointmentDto search)
+        {
+            var result = _context.Appointments.Include(p => p.Patient).Include(d => d.Doctor).AsQueryable();
+            return result.Where(x => x.StartDateTime >= search.StartDateTime && x.StartDateTime <= search.EndDateTime && x.DoctorId==search.DoctorId).ToList();
+             
+        }
     }
+
+ 
 }

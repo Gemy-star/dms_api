@@ -18,12 +18,15 @@ namespace Dms.Core.Dto
         public DateTime BirthDate { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+
+
     }
     public class PaitentDtocs : CreatePaitentDtos
     {
         [Required]
         public int Id { get; set; }
         public IList<AppointmentDto> Appointments { get; set; }
+
 
 
     }

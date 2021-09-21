@@ -15,9 +15,7 @@ namespace Dms.Repository
         private readonly ApplicationDbContext _context;
         private IDoctorRepository _doctors;
         private IPatientRepository _paitents;
-        private IPatientStatusRepository _paitentstatuses;
         private IAppointmentRepository _apointments;
-        private ISpecializationRepository _specilizations;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -29,12 +27,8 @@ namespace Dms.Repository
         IPatientRepository IUnitOfWork.Paitents => _paitents ??= new PatientRepository(_context);
 
 
-        IPatientStatusRepository IUnitOfWork.paitentstatus => _paitentstatuses ??= new PatientStatusRepository(_context);
-
-
        IAppointmentRepository IUnitOfWork.Apointments => _apointments ??= new AppointmentRepository(_context);
 
-        ISpecializationRepository IUnitOfWork.Specialization => _specilizations ??= new SpecializationRepository(_context);
 
         public void Dispose()
         {

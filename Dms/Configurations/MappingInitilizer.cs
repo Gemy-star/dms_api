@@ -18,10 +18,6 @@ namespace Dms.Configurations
             CreateMap<Doctor, CreateDoctorDtos>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<Appointment, CreateAppointmentDto>().ReverseMap();
-            CreateMap<Specialization, SpecializationDto>().ReverseMap();
-            CreateMap<Specialization, CreateSpecializationDto>().ReverseMap();
-            CreateMap<PatientStatus, PaitentStatusDto>().ReverseMap();
-            CreateMap<PatientStatus, CreatePaitentStatusDto>().ReverseMap();
 
 
 

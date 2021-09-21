@@ -11,9 +11,6 @@ namespace Dms.IRepository
     {
        IDoctorRepository Doctors { get; }
        IPatientRepository Paitents { get; }
-        IPatientStatusRepository paitentstatus { get; }
-        ISpecializationRepository Specialization { get; }
-
         IAppointmentRepository Apointments { get; }
 
         Task Save();

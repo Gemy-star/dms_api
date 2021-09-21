@@ -13,14 +13,11 @@ namespace Dms.Core.Models
         public string Phone { get; set; }
         public bool IsAvailable { get; set; }
         public string Address { get; set; }
-        public int SpecializationId { get; set; }
-        [ForeignKey("SpecializationId")]
-        public virtual Specialization Specialization { get; set; }
-      
         public virtual IList<Appointment> Appointments { get; set; }
         public Doctor()
         {
             Appointments = new List<Appointment>();
+
         }
 
     }
